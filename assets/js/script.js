@@ -55,6 +55,8 @@ function getWeather(city){
                     console.log('/n');
                 }
 
+                displayWeather();
+
             })
 
     });
@@ -74,7 +76,7 @@ function searchHistory(){
 }
 
 function addHistory(city){
-    
+
 }
 
 function displayWeather(){
@@ -95,7 +97,7 @@ function displayWeather(){
 
 
 
-
+displayWeather();
 
 $('#searchBtn').on('click', searchBtn);
 $('#history > button').on('click', searchHistory);
