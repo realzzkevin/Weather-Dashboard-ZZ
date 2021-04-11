@@ -1,5 +1,5 @@
 var weatherData
-var cityName = 'philadelphia';
+var defaultCity = 'philadelphia';
 var appId='18696e9d388303c0bae7863310154545';
 var requestGeo;
 var lat, lon;
@@ -17,6 +17,7 @@ function getWeather(city){
         if (response.ok) {
 
             geoCorrd = response.json();
+            console.log(response);
             
             geoCorrd.then(function (data){
 
@@ -42,8 +43,9 @@ function getWeather(city){
                             
                         weatherData.then( function(data){
 
-                            displayWeather();
-            
+                            console.log(data);
+                            displayWeather(data);
+
             
                         })
             
@@ -65,26 +67,35 @@ function getWeather(city){
 
 }
 
-function searchbtn(){
+function searchBtn(){
+    
+    var city = $('#search').val();
 
-    getWeather(cityName);
+    console.log(city);
 
-    addHistory(cityName);
+    getWeather(city);
+
+    addHistory(city);
 }
 
 function searchHistory(){
 
-    getWeather();
+    var city;
+
+    getWeather(city);
 }
 
 function addHistory(city){
 
-}
-
-function displayWeather(){
+    var 
 
 }
 
+function displayWeather(weather){
+
+
+
+}
 
 
 
@@ -98,8 +109,8 @@ function displayWeather(){
 
 
 
-getWeather(cityName);
 
-$('#searchBtn').on('click', searchBtn(e));
-$('#history > button').on('click', searchHistory(e));
-html 
+getWeather(defaultCity);
+
+$('#searchBtn').on('click', searchBtn);
+$('#history > button').on('click', searchHistory);
