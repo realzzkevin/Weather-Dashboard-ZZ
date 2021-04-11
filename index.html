@@ -10,15 +10,65 @@
         crossorigin="anonymous"
     />
 
+    <script src="https://kit.fontawesome.com/009cfbe601.js" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>Weather Dashboard</title>
 </head>
 <body>
-    <header>
+    <header class="jumbotron text-center">
+
+        <h1>Weather Dashboard</h1>
 
     </header>
 
-    <main>
+    <main class='container row'>
+
+        <section class ='col-3'>
+
+            <div class ="input-group">
+                <input type="search" class="form-control" name="search" id="search" placeholder="Search for City">
+                <button class="input-group-append btn btn-primary fas fa-search" for="search" type="button" id="searchBtn">                   
+                </button>
+            </div>
+
+            <div class="list-group" id="history">
+
+                <button type="button" class ='list-group-item list-group-item-action'>philadelphia</button>
+                <button type="button" class ='list-group-item list-group-item-action'></button>
+                <button type="button" class ='list-group-item list-group-item-action'></button>
+                <button type="button" class ='list-group-item list-group-item-action'></button>
+                <button type="button" class ='list-group-item list-group-item-action'></button>
+                <button type="button" class ='list-group-item list-group-item-action'></button>
+
+            </div>
+        </section>
+
+        <section class='card col-9'>
+
+            <div class='card-body' id="currentday">
+
+                <div>                    
+                    <h2 class='card-title'></h2>
+                    <img src="" alt="weathericon">
+                </div>
+
+
+
+            </div>
+
+            <div class='card-body' id='Forecast'>
+
+                <h2 class='card-title'>
+                    5-Day Forecast
+                </h2>
+
+                <div class='card-body'>
+
+
+                </div>
+            </div>
+        </section>
 
     </main>
     
