@@ -20,6 +20,24 @@ var weatherRequest; // = `http://api.openweathermap.org/data/2.5/onecall?lat=${l
 var weatherData;
 
 function getGeo(){
+    fetch(requestGeo)
+    .then(function (response){
+
+        if(response.ok){
+
+            weatherData = response.json();
+            weatherData.then(function(data){
+
+                console.log(weatherData);
+            });
+
+        }else {
+            alert('unable to connect');
+        }
+    });
+}
+/*
+function getGeo(){
 
     fetch(requestGeo)
 
@@ -77,67 +95,6 @@ function getGeo(){
 
 }
 
-
-/*
-function getApi() {
-    
-   fetch(requestGeo)
-
-    .then(function (response){
-
-        return response.json();
-       // return weatherData;
-    })
-
-    .then(function (data){
-
-        weatherData = data;
-
-        console.log(data)
-
-        console.log(data.name);
-
-        console.log('temp'+ data.main.temp);
-
-        console.log('humidity:'+data.main.humidity);
-
-        console.log('Wind Speed:'+data.wind.speed);
-
-        console.log(weatherData.coord);
-
-        console.log(weatherData.coord.lon);
-        
-        console.log(weatherData.coord.lat);
-
-        lat = weatherData.coord.lat;
-        lon = weatherData.coord.lon;
-
-        requestUv = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${appId}`;
-
-        fetch(requestUv)
-    
-        .then(function (response){
-    
-            return response.json();
-    
-        })
-    
-        .then(function(data){
-    
-            console.log(data);
-
-            console.log('end of getUv')
-        });
-
-
-    })    
-
-    
- 
-}
-
-
-getApi();
 */
 
 getGeo();

@@ -14,52 +14,54 @@ function getWeather(city){
 
     .then (function (response){
 
-        geoCorrd = response.json();
-        return geoCorrd;      
+        if (response.ok) {
+
+            geoCorrd = response.json();
+            
+            geoCorrd.then(function (data){
+
+                console.log(data[0]);
+            
+                lat = data[0].lat;
+            
+                lon = data[0].lon;
+            
+                console.log('lat = '+lat);
+                console.log('lon = '+lon);
+            
+                weatherRequest = `http://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${appId}`;      
+            
+            
+                fetch (weatherRequest)
+            
+                .then (function (respon){
+            
+                    if (respon.ok) {
+            
+                        weatherData=respon.json();
+                            
+                        weatherData.then( function(data){
+
+                            displayWeather();
+            
+            
+                        })
+            
+                    } else {
+
+                        alert('Error' + respon.statusText);
+                    }
+            
+                });                
+
+            })
+
+        } else {
+
+            alert('Error: '+ response.statusText);
+        }
             
     })
-
-    .then (function (data) {
-
-        console.log(data[0]);
-
-        lat = data[0].lat;
-
-        lon = data[0].lon;
-
-        console.log('lat = '+lat);
-        console.log('lon = '+lon);
-
-        weatherRequest = `http://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${appId}`;
-
-
-
-        fetch (weatherRequest)
-            .then (function (respon){
-
-                weatherData = respon.json();
-
-                return weatherData;
-            })
-
-            .then (function (data){
-
-                console.log(data);
-
-                console.log(data.current);
-
-
-                for(var i=0; i<5; i++){
-
-                    console.log(data.daily[i]);
-                    console.log('/n');
-                }
-
-                displayWeather();
-
-            })
-
-    });
 
 }
 
@@ -96,8 +98,8 @@ function displayWeather(){
 
 
 
+getWeather(cityName);
 
-displayWeather();
-
-$('#searchBtn').on('click', searchBtn);
-$('#history > button').on('click', searchHistory);
+$('#searchBtn').on('click', searchBtn(e));
+$('#history > button').on('click', searchHistory(e));
+html 
