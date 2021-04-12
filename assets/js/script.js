@@ -146,7 +146,7 @@ function displayWeather(weather){
 
     titleEl.text(cityName+' ('+ getDate(currentData.sunrise, weather.timezone_offset)+')');
     //console.log(currentData.weather.icon);
-    var iconEl = $('<img>').attr('src',"http://openweathermap.org/img/wn/"+currentData.weather[0].icon+".png");
+    var iconEl = $('<img>').attr('src',"https://openweathermap.org/img/wn/"+currentData.weather[0].icon+".png");
     iconEl.attr('alt', currentData.weather[0].description);
     var tempEl = $('<p>').text("Temperature: "+currentData.temp+"°F");
     var HumidEl = $('<p>').text("Humidity: "+currentData.humidity+"%");
