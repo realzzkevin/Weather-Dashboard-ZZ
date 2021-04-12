@@ -78,7 +78,7 @@ function searchBtn(){
     
     var city = $('#search').val();
 
-    console.log(cityName);
+    console.log(city);
 
     getWeather(city);
 
@@ -87,14 +87,46 @@ function searchBtn(){
 
 function searchHistory(){
 
-    var city;
+    var city = event.target.textContent;
+
+    console.log(event.target.textContent);
 
     getWeather(city);
 }
 
 function addHistory(city){
 
-    //var 
+    var allSearch = $('#history > button');
+    var historyEl = $('<button>').addClass('list-group-item list-group-item-action')
+    historyEl.attr('type', 'button');
+
+    console.log(allSearch.length);
+
+    if (allSearch.length===0){
+
+        historyEl.text(cityName);
+        $('#history').append(historyEl);
+
+    }else {
+
+        for (var i=0; i<allSearch.length; i++){
+            console.log('all searchs'+allSearch[i].html);
+    
+            if(allSearch[i].html()===cityName){
+                return;
+            }else {
+
+                historyEl.text(cityName);
+                $('#history').append(historyEl);
+        
+            }
+        }
+
+    }
+
+
+    
+
 
 }
 function getDate(UTCtime, timeZone){
@@ -120,7 +152,7 @@ function displayWeather(weather){
     var divEl = $('<div>').addClass('row');
     var titleEl = $('<h2>').addClass('card-title');
     //titleEl.text(cityName+' ('+ getDate(currentData.sunrise, weather.timezone_offset)+')');
-    titleEl.text(cityName+' ('+ getDate(currentData.sunrise, 0)+')');
+    titleEl.text(cityName+' ('+ getDate(currentData.sunrise, weather.timezone_offset)+')');
     console.log(currentData.weather.icon);
     var iconEl = $('<img>').attr('src',"http://openweathermap.org/img/wn/"+currentData.weather[0].icon+".png");
     iconEl.attr('alt', currentData.weather[0].description);
@@ -162,18 +194,16 @@ function displayWeather(weather){
 
     forecastCard.empty();
 
-    for(var i=0; i<5; i++){
+    for(var i=1; i<6; i++){
 
         console.log(dailyData[i]);
 
-        var cardEl = $('<div>').addClass("card-body daily");
+        var cardEl = $('<div>').addClass("card-body badge badge-primary");
        //var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, weather.timezone_offset));
-       var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, 0));
+       var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, weather.timezone_offset));
         iconEl = $('<img>').attr('src',"http://openweathermap.org/img/wn/"+dailyData[i].weather[0].icon+".png");
         iconEl.attr('alt', dailyData[i].weather[0].description);
         tempEl = $('<p>').text("Temp: "+dailyData[i].temp.day+"°F");
-
-        console.log('daily temp'+dailyData[i].temp);
         HumidEl = $('<p>').text("Humidity: "+dailyData[i].humidity+"%");
 
 
@@ -191,3 +221,5 @@ getWeather(defaultCity);
 
 $('#searchBtn').on('click', searchBtn);
 $('#history > button').on('click', searchHistory);
+
+console.log($('#history > button'));
