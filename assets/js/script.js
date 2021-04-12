@@ -36,7 +36,7 @@ function getWeather(city){
                 console.log('lat = '+lat);
                 console.log('lon = '+lon);
             
-                weatherRequest = `http://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${appId}`;      
+                weatherRequest = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${appId}`;      
             
             
                 fetch (weatherRequest)
