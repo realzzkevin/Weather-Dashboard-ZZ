@@ -6,7 +6,7 @@ var requestGeo;
 var lat, lon;
 var weatherRequest;
 
-function getWeather(city){   
+async function getWeather(city){   
     
     requestGeo = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${appId}`;
     var geoCorrd;
@@ -19,8 +19,6 @@ function getWeather(city){
 
             geoCorrd = response.json();
 
-            //cityName = geoCorrd.name;
-            //console.log(cityName);
             console.log(response);
             
             geoCorrd.then(function (data){
@@ -28,6 +26,8 @@ function getWeather(city){
                 console.log(data[0]);
 
                 cityName = data[0].name;
+
+                console.log(cityName);
             
                 lat = data[0].lat;
             
@@ -52,7 +52,9 @@ function getWeather(city){
                             console.log(data);
 
                             getDate(data.current.dt, data.timezone_offset);
+
                             displayWeather(data);
+                            return cityName;
             
                         })
             
@@ -83,13 +85,18 @@ function searchBtn(){
     getWeather(city);
 
     addHistory(city);
+
+    //getWeather(city);
+    //addHistory(cityName);
+    //addHistory(getWeather(city));
 }
+
 
 function searchHistory(){
 
-    var city = event.target.textContent;
+   var city = $(this).text() ;
 
-    console.log(event.target.textContent);
+    console.log('history city'+$(event.target).text());
 
     getWeather(city);
 }
@@ -102,33 +109,21 @@ function addHistory(city){
 
     console.log(allSearch.length);
 
-    if (allSearch.length===0){
+    for (var i=0; i<allSearch.length; i++){
+        console.log('all searchs'+ $(allSearch[i]).text());
 
-        historyEl.text(cityName);
-        $('#history').append(historyEl);
+        if($(allSearch[i]).text()===city){
 
-    }else {
-
-        for (var i=0; i<allSearch.length; i++){
-            console.log('all searchs'+allSearch[i].html);
-    
-            if(allSearch[i].html()===cityName){
-                return;
-            }else {
-
-                historyEl.text(cityName);
-                $('#history').append(historyEl);
-        
-            }
+            return;
         }
-
     }
-
-
     
-
+    historyEl.text(city);
+    $('#history').append(historyEl);
+    $('#history > button').on('click', searchHistory);
 
 }
+
 function getDate(UTCtime, timeZone){
 
     var dateStr;
@@ -151,9 +146,9 @@ function displayWeather(weather){
 
     var divEl = $('<div>').addClass('row');
     var titleEl = $('<h2>').addClass('card-title');
-    //titleEl.text(cityName+' ('+ getDate(currentData.sunrise, weather.timezone_offset)+')');
+
     titleEl.text(cityName+' ('+ getDate(currentData.sunrise, weather.timezone_offset)+')');
-    console.log(currentData.weather.icon);
+    //console.log(currentData.weather.icon);
     var iconEl = $('<img>').attr('src',"http://openweathermap.org/img/wn/"+currentData.weather[0].icon+".png");
     iconEl.attr('alt', currentData.weather[0].description);
     var tempEl = $('<p>').text("Temperature: "+currentData.temp+"°F");
@@ -162,7 +157,7 @@ function displayWeather(weather){
     var uvSpan = $('<span>').text(currentData.uvi).addClass('badge');
     var uvEl = $('<p>').text("UV index: ").append(uvSpan);
 
-    console.log(uvEl.html());
+    //console.log(uvEl.html());
 
     divEl.append(titleEl);
     divEl.append(iconEl);
@@ -199,9 +194,9 @@ function displayWeather(weather){
         console.log(dailyData[i]);
 
         var cardEl = $('<div>').addClass("card-body badge badge-primary");
-       //var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, weather.timezone_offset));
-       var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, weather.timezone_offset));
-        iconEl = $('<img>').attr('src',"http://openweathermap.org/img/wn/"+dailyData[i].weather[0].icon+".png");
+
+        var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, weather.timezone_offset));
+        iconEl = $('<img>').attr('src',"https://openweathermap.org/img/wn/"+dailyData[i].weather[0].icon+".png");
         iconEl.attr('alt', dailyData[i].weather[0].description);
         tempEl = $('<p>').text("Temp: "+dailyData[i].temp.day+"°F");
         HumidEl = $('<p>').text("Humidity: "+dailyData[i].humidity+"%");
@@ -221,5 +216,3 @@ getWeather(defaultCity);
 
 $('#searchBtn').on('click', searchBtn);
 $('#history > button').on('click', searchHistory);
-
-console.log($('#history > button'));
