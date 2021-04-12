@@ -1,4 +1,5 @@
 var weatherData
+//default city for initial page.
 var defaultCity = 'philadelphia';
 var cityName;
 var appId='18696e9d388303c0bae7863310154545';
@@ -6,11 +7,13 @@ var requestGeo;
 var lat, lon;
 var weatherRequest;
 
+// main api call function 
 async function getWeather(city){   
     
+    // url for geocoding api call. 
     requestGeo = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${appId}`;
     var geoCorrd;
-
+    // fetch city coordiantion  
     fetch(requestGeo)
 
     .then (function (response){
@@ -19,23 +22,14 @@ async function getWeather(city){
 
             geoCorrd = response.json();
 
-            console.log(response);
-            
             geoCorrd.then(function (data){
-
-                console.log(data[0]);
-
+                //get lat and lon when fetch return success 
                 cityName = data[0].name;
-
-                console.log(cityName);
-            
+          
                 lat = data[0].lat;
             
                 lon = data[0].lon;
-            
-                console.log('lat = '+lat);
-                console.log('lon = '+lon);
-            
+                //url for one call api, getting all weather conditions.
                 weatherRequest = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=imperial&appid=${appId}`;      
             
             
@@ -48,18 +42,14 @@ async function getWeather(city){
                         weatherData=respon.json();
                             
                         weatherData.then( function(data){
-
-                            console.log(data);
-
-                            getDate(data.current.dt, data.timezone_offset);
-
+                            //use data to display weather condtion. 
                             displayWeather(data);
                             return cityName;
             
                         })
             
                     } else {
-
+                        //display error alert.
                         alert('Error' + respon.statusText);
                     }
             
@@ -75,12 +65,10 @@ async function getWeather(city){
     })
 
 }
-
+// search bar function; search city weather and save city into history
 function searchBtn(){
     
     var city = $('#search').val();
-
-    console.log(city);
 
     getWeather(city);
 
@@ -88,26 +76,22 @@ function searchBtn(){
 
 }
 
-
+// history search function
 function searchHistory(){
 
-   var city = $(this).text() ;
-
-    console.log('history city'+$(event.target).text());
-
+    var city = $(this).text() ;
     getWeather(city);
 }
 
+// add searched history. Add event listener too.
 function addHistory(city){
 
     var allSearch = $('#history > button');
     var historyEl = $('<button>').addClass('list-group-item list-group-item-action border')
     historyEl.attr('type', 'button');
 
-    console.log(allSearch.length);
-
+    // if city already saved, abort; otherwise add new save history to history element.
     for (var i=0; i<allSearch.length; i++){
-        console.log('all searchs'+ $(allSearch[i]).text());
 
         if($(allSearch[i]).text()===city){
 
@@ -121,6 +105,7 @@ function addHistory(city){
 
 }
 
+// convert UTCtime into MM/DD/YYYY format
 function getDate(UTCtime, timeZone){
 
     var dateStr;
@@ -134,10 +119,9 @@ function getDate(UTCtime, timeZone){
 }
 
 function displayWeather(weather){
-
+    //use fetched data to construct current weather section;
     var curDayCard = $('#currentday');
     var currentData = weather.current;
-    console.log(currentData);
 
     curDayCard.empty();
 
@@ -145,7 +129,6 @@ function displayWeather(weather){
     var titleEl = $('<h2>').addClass('card-title');
 
     titleEl.text(cityName+' ('+ getDate(currentData.sunrise, weather.timezone_offset)+')');
-    //console.log(currentData.weather.icon);
     var iconEl = $('<img>').attr('src',"https://openweathermap.org/img/wn/"+currentData.weather[0].icon+".png");
     iconEl.attr('alt', currentData.weather[0].description);
     var tempEl = $('<p>').text("Temperature: "+currentData.temp+"°F");
@@ -153,8 +136,6 @@ function displayWeather(weather){
     var windEl = $('<p>').text("Wind Speed: "+currentData.wind_speed+" MPH");
     var uvSpan = $('<span>').text(currentData.uvi).addClass('badge');
     var uvEl = $('<p>').text("UV index: ").append(uvSpan);
-
-    //console.log(uvEl.html());
 
     divEl.append(titleEl);
     divEl.append(iconEl);
@@ -167,7 +148,7 @@ function displayWeather(weather){
 
 
     var uv = parseInt(currentData.uvi);
-
+    // assign differnt color background to UV index;
     if (uv<=2){
         uvSpan.addClass("uvGreen");
     } else if (uv>=3 && uv <=5 ){
@@ -180,6 +161,7 @@ function displayWeather(weather){
         uvSpan.addClass("uvViolet");
     }
 
+    // construct 5 display card for 5 day forcast
     var forecastCard = $('#5day');
 
     var dailyData = weather.daily;
@@ -187,8 +169,6 @@ function displayWeather(weather){
     forecastCard.empty();
 
     for(var i=1; i<6; i++){
-
-        console.log(dailyData[i]);
 
         var cardEl = $('<div>').addClass("card-body badge badge-primary daily");
 
@@ -208,8 +188,9 @@ function displayWeather(weather){
 
     }
 }
-
+// initial page
 getWeather(defaultCity);
 
+// add event listener for search button.
 $('#searchBtn').on('click', searchBtn);
 $('#history > button').on('click', searchHistory);
