@@ -1,5 +1,6 @@
 var weatherData
 var defaultCity = 'philadelphia';
+var cityName;
 var appId='18696e9d388303c0bae7863310154545';
 var requestGeo;
 var lat, lon;
@@ -17,11 +18,16 @@ function getWeather(city){
         if (response.ok) {
 
             geoCorrd = response.json();
+
+            //cityName = geoCorrd.name;
+            //console.log(cityName);
             console.log(response);
             
             geoCorrd.then(function (data){
 
                 console.log(data[0]);
+
+                cityName = data[0].name;
             
                 lat = data[0].lat;
             
@@ -44,8 +50,9 @@ function getWeather(city){
                         weatherData.then( function(data){
 
                             console.log(data);
-                            displayWeather(data);
 
+                            getDate(data.current.dt, data.timezone_offset);
+                            displayWeather(data);
             
                         })
             
@@ -71,7 +78,7 @@ function searchBtn(){
     
     var city = $('#search').val();
 
-    console.log(city);
+    console.log(cityName);
 
     getWeather(city);
 
@@ -87,28 +94,98 @@ function searchHistory(){
 
 function addHistory(city){
 
-    var 
+    //var 
+
+}
+function getDate(UTCtime, timeZone){
+
+    var dateStr;
+    
+    var curTime = new Date((UTCtime+timeZone)*1000);
+
+    dateStr = (curTime.getMonth()+1)+'/'+curTime.getDate()+'/'+curTime.getFullYear();
+
+    return dateStr;
 
 }
 
 function displayWeather(weather){
 
+    var curDayCard = $('#currentday');
+    var currentData = weather.current;
+    console.log(currentData);
+
+    curDayCard.empty();
+
+    var divEl = $('<div>').addClass('row');
+    var titleEl = $('<h2>').addClass('card-title');
+    //titleEl.text(cityName+' ('+ getDate(currentData.sunrise, weather.timezone_offset)+')');
+    titleEl.text(cityName+' ('+ getDate(currentData.sunrise, 0)+')');
+    console.log(currentData.weather.icon);
+    var iconEl = $('<img>').attr('src',"http://openweathermap.org/img/wn/"+currentData.weather[0].icon+".png");
+    iconEl.attr('alt', currentData.weather[0].description);
+    var tempEl = $('<p>').text("Temperature: "+currentData.temp+"°F");
+    var HumidEl = $('<p>').text("Humidity: "+currentData.humidity+"%");
+    var windEl = $('<p>').text("Wind Speed: "+currentData.wind_speed+" MPH");
+    var uvSpan = $('<span>').text(currentData.uvi).addClass('badge');
+    var uvEl = $('<p>').text("UV index: ").append(uvSpan);
+
+    console.log(uvEl.html());
+
+    divEl.append(titleEl);
+    divEl.append(iconEl);
+
+    curDayCard.append(divEl);
+    curDayCard.append(tempEl);
+    curDayCard.append(HumidEl);
+    curDayCard.append(windEl);
+    curDayCard.append(uvEl);
 
 
+    var uv = parseInt(currentData.uvi);
+
+    if (uv<=2){
+        uvSpan.addClass("uvGreen");
+    } else if (uv>=3 && uv <=5 ){
+        uvSpan.addClass("uvYellow");
+    } else if (uv>=6 && uv<=7){
+        uvSpan.addClass("uvOrange");
+    } else if (uv>=8 && uv<=10){
+        uvSpan.addClass("uvRed");
+    } else if (uv>=11){
+        uvSpan.addClass("uvViolet");
+    }
+
+    var forecastCard = $('#5day');
+
+    var dailyData = weather.daily;
+
+    forecastCard.empty();
+
+    for(var i=0; i<5; i++){
+
+        console.log(dailyData[i]);
+
+        var cardEl = $('<div>').addClass("card-body daily");
+       //var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, weather.timezone_offset));
+       var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, 0));
+        iconEl = $('<img>').attr('src',"http://openweathermap.org/img/wn/"+dailyData[i].weather[0].icon+".png");
+        iconEl.attr('alt', dailyData[i].weather[0].description);
+        tempEl = $('<p>').text("Temp: "+dailyData[i].temp.day+"°F");
+
+        console.log('daily temp'+dailyData[i].temp);
+        HumidEl = $('<p>').text("Humidity: "+dailyData[i].humidity+"%");
+
+
+        cardEl.append(dateEl);
+        cardEl.append(iconEl);
+        cardEl.append(tempEl);
+        cardEl.append(HumidEl);
+
+        forecastCard.append(cardEl);
+
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 getWeather(defaultCity);
 

@@ -29,6 +29,10 @@ function getGeo(){
             weatherData.then(function(data){
 
                 console.log(weatherData);
+
+                //var date = new Date(weatherData.current.dt*1000);
+
+                //console.log(Date);
             });
 
         }else {
