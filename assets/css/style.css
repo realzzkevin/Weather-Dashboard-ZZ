@@ -1,3 +1,4 @@
+
 span {
     color: white;
 }
@@ -21,4 +22,14 @@ span {
 .uvViolet {
 
     background-color: violet;
+}
+
+#history {
+
+    margin-top: 20px;
+}
+
+.daily {
+
+    margin: 8px;
 }

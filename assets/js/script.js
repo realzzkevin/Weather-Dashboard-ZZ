@@ -86,9 +86,6 @@ function searchBtn(){
 
     addHistory(city);
 
-    //getWeather(city);
-    //addHistory(cityName);
-    //addHistory(getWeather(city));
 }
 
 
@@ -104,7 +101,7 @@ function searchHistory(){
 function addHistory(city){
 
     var allSearch = $('#history > button');
-    var historyEl = $('<button>').addClass('list-group-item list-group-item-action')
+    var historyEl = $('<button>').addClass('list-group-item list-group-item-action border')
     historyEl.attr('type', 'button');
 
     console.log(allSearch.length);
@@ -193,7 +190,7 @@ function displayWeather(weather){
 
         console.log(dailyData[i]);
 
-        var cardEl = $('<div>').addClass("card-body badge badge-primary");
+        var cardEl = $('<div>').addClass("card-body badge badge-primary daily");
 
         var dateEl = $('<h3>').text(getDate(dailyData[i].sunrise, weather.timezone_offset));
         iconEl = $('<img>').attr('src',"https://openweathermap.org/img/wn/"+dailyData[i].weather[0].icon+".png");
