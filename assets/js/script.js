@@ -8,7 +8,7 @@ var weatherRequest;
 
 function getWeather(city){   
     
-    requestGeo = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${appId}`;
+    requestGeo = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${appId}`;
     var geoCorrd;
 
     fetch(requestGeo)
