@@ -6,6 +6,7 @@ var appId='18696e9d388303c0bae7863310154545';
 var requestGeo;
 var lat, lon;
 var weatherRequest;
+var savedHistory;
 
 // main api call function 
 async function getWeather(city){   
@@ -103,6 +104,23 @@ function addHistory(city){
     $('#history').append(historyEl);
     $('#history > button').on('click', searchHistory);
 
+    // save new search into local storage
+    if (savedHistory === null){
+        savedHistory= [city];
+    }else {
+
+        for (var j=0; i<savedHistory.length; j++){
+
+            if(city ===savedHistory[i]){
+                return;
+            }
+        }
+
+        savedHistory.push(city);
+    }
+
+    localStorage.setItem('SavedSearch', JSON.stringify(savedHistory));
+
 }
 
 // convert UTCtime into MM/DD/YYYY format
@@ -188,8 +206,28 @@ function displayWeather(weather){
 
     }
 }
+// load saved search from local storage.
+function loadHistory() {
+
+    savedHistory = JSON.parse(localStorage.getItem('SavedSearch'));
+
+    if (savedHistory === null){
+
+        return;
+
+    }else {
+        
+        for(var i =0; i < savedHistory.length; i++){
+
+            addHistory(savedHistory[i]);
+
+        }
+    }
+}
+
 // initial page
 getWeather(defaultCity);
+loadHistory();
 
 // add event listener for search button.
 $('#searchBtn').on('click', searchBtn);
